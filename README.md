@@ -4,11 +4,11 @@ Se trata de un juego que contiene varios laberintos a resolver. Se resolverán e
 
 ## Integrantes del equipo
 
--Diego Fernandes Alves (55229).
--
--
--
--
+Diego Fernandes Alves (55229).
+
+
+
+
 
 ## Objetivos del trabajo
 
