@@ -1,5 +1,11 @@
 #include <stdio.h>
 
+typedef struct
+{
+    int pos[2];
+
+} coord; //Estructura para definir las coordenadas del jugador dentro del laberinto
+
 int main()
 {
     int opc, dificultad;
