@@ -76,7 +76,27 @@ int main()
         caracter = laberinto.casillas[i];
 
         if(caracter == '1')
+        {
+            laberinto.casillas[i] = '#';
+        }
 
+    }
+
+    for(i=0; i<laberinto.largo; i++)
+    {
+        for(j=0; j<laberinto.ancho; j++)
+        {
+            int Pos_vMatriz = laberinto.ancho * i + j;
+            //Pos_vMatriz permite "vectorizar" la matriz en la que tenemos contenido el laberinto
+            //De esta forma, la casilla (2,1) es decir fila 1, columna 0 (de la matriz 3x3) entonces,
+            //Corresponde a la posicion = 3*1 + 0 = 3 en el vector
+
+            ///Incluir en el proyecto un documento aclarativo
+
+            printf("%c ", laberinto.casillas[Pos_vMatriz]);
+        }
+
+        printf("\n");
     }
 
     return 0;
