@@ -1,16 +1,79 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-void imprime(char[11][11], int nFil, int nCol);
-void movimiento(char tecla);
+typedef struct
+{
+    int largo;
+    int ancho;
+    int tamano;
+    char* casillas;
+
+}Laberinto; //Definicion de la estructura Laberinto
+
 
 int main()
 {
     //Declaracion de variables
-    int i;
-    int x = 3, y = 4; //Coordenadas del punto de partida "o" (columna 3, fila 4 de la matriz, la primera fila y columna son la 0)
-    int xe = 9, ye = 6;
+    struct Laberinto laberinto;
+    int filas = 1;
+    int columnas = 1;
+    int contador = 0;
+    int i = 0, j = 0;
+    int primeraLinea = 0;
+    char caracter;
 
-    //se podrian emplear estructuras para almacenar las coordenadas
+    /* Consideraciones: Si se quiere modificar el fichero "Laberinto.txt" para ampliar el laberinto existente en él,
+    se deberán separar los caracteres correspondientes a pared, jugador y camino por espacios en blanco */
+
+    FILE* pf = NULL; //Iniciamos el puntero a fichero pf, con NULL para asegurar que no apunte a nada
+
+    pf = fopen("Laberinto.txt", "r");
+
+    if(pf != NULL) //Bucle para leer los datos del fichero Laberinto.txt y almacenar los valores leidos en la estructura laberinto
+    {
+        char valor;
+
+        while(fscanf(pf, "%c", &valor) != EOF)
+        {
+            if(valor == '\n')
+            {
+                filas++;
+                primeraLinea = 1;
+            }
+            else if(valor == ' ' && primeraLinea == 0)
+            {
+                columnas++;
+            }
+        }
+
+        laberinto.largo = filas;
+        laberinto.ancho = columnas;
+        laberinto.tamano = filas*columnas;
+
+        laberinto.casillas = (*char)malloc(laberinto.tamano);
+
+        fclose(pf); //Cerramos el fichero
+    }
+
+    pf = fopen("Laberinto.txt", "r");
+
+    if(pf != NULL)
+    {
+        char valor;
+
+        while(fscanf(pf, "%c", &valor) != EOF)
+        {
+            if(valor != '\n' && valor != ' ') //Bucle que lee el numero de casillas en el laberinto del fichero Laberinto.txt
+            {
+                *(laberinto.casillas + contador) = valor;
+                contador++;
+            }
+        }
+    }
+
+
+
+
 
     char laberintoPrueba[11][11] = {
     "XXXXXXXXXX",
