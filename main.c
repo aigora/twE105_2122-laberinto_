@@ -14,7 +14,7 @@ typedef struct
 int main()
 {
     //Declaracion de variables
-    struct Laberinto laberinto;
+    Laberinto laberinto;
     int filas = 1;
     int columnas = 1;
     int contador = 0;
@@ -50,7 +50,7 @@ int main()
         laberinto.ancho = columnas;
         laberinto.tamano = filas*columnas;
 
-        laberinto.casillas = (*char)malloc(laberinto.tamano);
+        laberinto.casillas = (char*)malloc(laberinto.tamano);
 
         fclose(pf); //Cerramos el fichero
     }
@@ -82,7 +82,7 @@ int main()
 
     }
 
-    for(i=0; i<laberinto.largo; i++)
+    for(i=0; i<laberinto.largo; i++) //Bucle para imprimir el laberinto
     {
         for(j=0; j<laberinto.ancho; j++)
         {
