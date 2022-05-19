@@ -86,14 +86,15 @@ int main()
     {
         for(j=0; j<laberinto.ancho; j++)
         {
-            int Pos_vMatriz = laberinto.ancho * i + j;
-            //Pos_vMatriz permite "vectorizar" la matriz en la que tenemos contenido el laberinto
+            int PosvMatriz = laberinto.ancho * i + j;
+            //PosvMatriz permite "vectorizar" la matriz en la que tenemos contenido el laberinto
             //De esta forma, la casilla (2,1) es decir fila 1, columna 0 (de la matriz 3x3) entonces,
             //Corresponde a la posicion = 3*1 + 0 = 3 en el vector
+            //PosvMatriz es la posicion del vector que se obtiene al vectorizar la matriz
 
             ///Incluir en el proyecto un documento aclarativo
 
-            printf("%c ", laberinto.casillas[Pos_vMatriz]);
+            printf("%c ", laberinto.casillas[PosvMatriz]);
         }
 
         printf("\n");
