@@ -1,71 +1,97 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef struct
+
+typedef struct Laberinto
 {
-    int pos[2];
+    int largo;
+    int ancho;
+    int tamano;
+    char* casillas;
+}Laberinto;
 
-} coord; //Estructura para definir las coordenadas del jugador dentro del laberinto
+
 
 int main()
 {
-    int opc, dificultad;
+    Laberinto laberinto;
+    int filas = 1;
+    int columnas = 1;
+    int contador = 0;
+    int i = 0;
+    int j = 0;
+    int primeraLinea = 0;
+    char caracter;
 
-    do
+   FILE* pf = NULL;
+
+   pf = fopen("laberinto.txt", "r");
+
+
+    if(pf != NULL)
     {
-        printf("MENU DEL LABERINTO\n\n");
-        printf("1) Jugar\n");
-        printf("2) Salir\n");
+        char valor;
 
-        scanf("%d", &opc);
-
-        switch(opc)
+        while(fscanf(pf, "%c", &valor) != EOF)
         {
-
-        case 1:
-            do
+            if(valor == '\n')
             {
-
-                printf("\nSeleccione el grado de dificultad:\n\n");
-                printf("1) Principiante\n");
-                printf("2) Veterano\n");
-                printf("3) Experto\n");
-                printf("4) Volver atras\n");
-
-                scanf("%d", &dificultad);
-
-                switch(dificultad)
-                {
-                case 1:
-                    break;
-
-                case 2:
-                    break;
-
-                case 3:
-                    break;
-
-                case 4:
-                    break;
-
-                default:
-                    printf("Error, introduzca de nuevo la dificultad\n");
-                    break;
-                }
-
-            } while(dificultad != 4);
-
-            break;
-
-        case 2:
-            break;
-
-        default:
-            printf("Error, no existe opcion la introducida");
-
+                filas++;
+                primeraLinea = 1;
+            }
+            else if(valor == ' ' && primeraLinea == 0)
+            {
+                columnas++;
+            }
         }
 
-    } while(opc != 2);
+        laberinto.largo = filas;
+        laberinto.ancho = columnas;
+        laberinto.tamano = filas * columnas;
 
+        laberinto.casillas = (char*)malloc(laberinto.tamano);
+        fclose(pf);
+    }
 
+   pf = fopen("laberinto.txt", "r");
+
+    if(pf != NULL)
+    {
+        char valor;
+
+        while(fscanf(pf, "%c", &valor) != EOF)
+        {
+            if(valor != '\n' && valor != ' ')
+            {
+                *(laberinto.casillas + contador) = valor;
+                contador++;
+            }
+
+        }
+        fclose(pf);
+    }
+
+    for(i = 0; i < laberinto.tamano; i++)
+    {
+        caracter = laberinto.casillas[i];
+
+        if(caracter == '1')
+        {
+            laberinto.casillas[i] = '#';
+        }
+    }
+
+    for(i = 0; i < laberinto.largo; i++)
+    {
+        for(j = 0; j < laberinto.ancho; j++)
+        {
+            int PosvMatriz = laberinto.ancho * i + j;
+
+            printf("%c ", laberinto.casillas[PosvMatriz]);
+        }
+        printf("\n");
+    }
     return 0;
 }
+
+
