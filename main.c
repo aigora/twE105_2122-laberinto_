@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define LONGITUD_ARCHIVO_MAX 40
 
 typedef struct Laberinto
 {
@@ -10,10 +11,14 @@ typedef struct Laberinto
     char* casillas;
 }Laberinto;
 
+///Prototipos de funciones
+void DibujarLaberinto(Laberinto laberinto);
+
 
 
 int main()
 {
+    /*
     Laberinto laberinto;
     int filas = 1;
     int columnas = 1;
@@ -91,7 +96,31 @@ int main()
         }
         printf("\n");
     }
+    */
+    Laberinto laberinto;
+
+    LeerArchivo();
+
+    DibujarLaberinto();
+
     return 0;
 }
 
+void DibujarLaberinto(Laberinto laberinto) ///Funcion para imprimir por pantalla el laberinto
+{
+    int i = 0;
+    int j = 0;
 
+
+    for(i = 0; i < laberinto.largo; i++) //Bucles anidados para recorrer el laberinto
+    {
+        for(j = 0; j < laberinto.ancho; j++)
+        {
+            int PosvMatriz = laberinto.ancho * i + j; //Vectoriza la matriz que contiene al laberinto
+
+            printf("%c ", laberinto.casillas[PosvMatriz]); //Muestra la casilla separada por un espacio (para ver mas limpio el laberinto)
+        }
+        //Siguiente fila
+        printf("\n");
+    }
+}
