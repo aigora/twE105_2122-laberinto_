@@ -13,6 +13,8 @@ typedef struct Laberinto
 
 ///Prototipos de funciones
 void DibujarLaberinto(Laberinto laberinto);
+int LeerArchivo(const char* archivo, Laberinto* laberinto);
+int RellenarCasillas(const char* archivo, Laberinto* laberinto);
 
 
 
