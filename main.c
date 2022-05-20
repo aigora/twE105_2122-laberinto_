@@ -108,6 +108,29 @@ int main()
     return 0;
 }
 
+void PedirArchivo(Laberinto* laberinto) ///Funcion para pedir el archivo
+{
+    int resultadoLectura = 0;
+
+    char archivo[LONGITUD_ARCHIVO_MAX];
+
+    printf("Introduzca el archivo del laberinto: ");
+
+
+    do //Pide el archivo hasta que se introduzca uno valido
+    {
+        scanf("%s", archivo); ///El nombre del archivo introducido por teclado debe ser <nombrearchivo>.<txt>
+        resultadoLectura = LeerArchivo(archivo, laberinto); //La funcion LeerArchivo devuelve 0 en caso de no poder leer el archivo
+
+        if(resultadoLectura == 0) //Si no ha LeerArchivo no ha podido leer el archivo es porque hemos introducido un nombre no valido
+        {
+            printf("El archivo no es valido, introduzca uno valido: ");
+        }
+
+    }
+    while(resultadoLectura != 1);
+}
+
 int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Funcion que rellena las casillas del laberinto a partir de los valores leidos
 {
     int contador = 0;
