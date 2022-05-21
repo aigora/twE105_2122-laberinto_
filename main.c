@@ -7,7 +7,7 @@ typedef struct Laberinto
 {
     int largo;
     int ancho;
-    int tamano;
+    int dimensiones;
     char* casillas;
 }Laberinto;
 
@@ -15,121 +15,21 @@ typedef struct Laberinto
 void DibujarLaberinto(Laberinto laberinto);
 int LeerArchivo(const char* archivo, Laberinto* laberinto);
 int RellenarCasillas(const char* archivo, Laberinto* laberinto);
-
+void PedirArchivo(Laberinto* laberinto);
 
 
 int main()
 {
-    /*
-    Laberinto laberinto;
-    int filas = 1;
-    int columnas = 1;
-    int contador = 0;
-    int i = 0;
-    int j = 0;
-    int primeraLinea = 0;
-    char caracter;
-
-   FILE* pf = NULL;
-
-   pf = fopen("laberinto.txt", "r");
-
-
-    if(pf != NULL)
-    {
-        char valor;
-
-        while(fscanf(pf, "%c", &valor) != EOF)
-        {
-            if(valor == '\n')
-            {
-                filas++;
-                primeraLinea = 1;
-            }
-            else if(valor == ' ' && primeraLinea == 0)
-            {
-                columnas++;
-            }
-        }
-
-        laberinto.largo = filas;
-        laberinto.ancho = columnas;
-        laberinto.tamano = filas * columnas;
-
-        laberinto.casillas = (char*)malloc(laberinto.tamano);
-        fclose(pf);
-    }
-
-   pf = fopen("laberinto.txt", "r");
-
-    if(pf != NULL)
-    {
-        char valor;
-
-        while(fscanf(pf, "%c", &valor) != EOF)
-        {
-            if(valor != '\n' && valor != ' ')
-            {
-                *(laberinto.casillas + contador) = valor;
-                contador++;
-            }
-
-        }
-        fclose(pf);
-    }
-
-    for(i = 0; i < laberinto.tamano; i++)
-    {
-        caracter = laberinto.casillas[i];
-
-        if(caracter == '1')
-        {
-            laberinto.casillas[i] = '#';
-        }
-    }
-
-    for(i = 0; i < laberinto.largo; i++)
-    {
-        for(j = 0; j < laberinto.ancho; j++)
-        {
-            int PosvMatriz = laberinto.ancho * i + j;
-
-            printf("%c ", laberinto.casillas[PosvMatriz]);
-        }
-        printf("\n");
-    }
-    */
     Laberinto laberinto;
 
-    LeerArchivo();
+    PedirArchivo(&laberinto);
 
-    DibujarLaberinto();
+    DibujarLaberinto(laberinto);
+
 
     return 0;
 }
 
-void PedirArchivo(Laberinto* laberinto) ///Funcion para pedir el archivo
-{
-    int resultadoLectura = 0;
-
-    char archivo[LONGITUD_ARCHIVO_MAX];
-
-    printf("Introduzca el archivo del laberinto: ");
-
-
-    do //Pide el archivo hasta que se introduzca uno valido
-    {
-        scanf("%s", archivo); ///El nombre del archivo introducido por teclado debe ser <nombrearchivo>.<txt>
-        resultadoLectura = LeerArchivo(archivo, laberinto); //La funcion LeerArchivo devuelve 0 en caso de no poder leer el archivo
-
-        if(resultadoLectura == 0) //Si no ha LeerArchivo no ha podido leer el archivo es porque hemos introducido un nombre no valido
-        {
-            printf("El archivo no es valido, introduzca uno valido: ");
-        }
-
-    }
-    while(resultadoLectura != 1);
-}
 
 int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Funcion que rellena las casillas del laberinto a partir de los valores leidos
 {
@@ -207,6 +107,28 @@ int LeerArchivo(const char* archivo, Laberinto* laberinto) ///Funcion para leer 
     return 0;
 }
 
+void PedirArchivo(Laberinto* laberinto) ///Funcion para pedir el archivo
+{
+    int resultadoLectura = 0;
+
+    char archivo[LONGITUD_ARCHIVO_MAX];
+
+    printf("Introduzca el archivo del laberinto: ");
+
+
+    do //Pide el archivo hasta que se introduzca uno valido
+    {
+        scanf("%s", archivo); ///El nombre del archivo introducido por teclado debe ser <nombrearchivo>.<txt>
+        resultadoLectura = LeerArchivo(archivo, laberinto); //La funcion LeerArchivo devuelve 0 en caso de no poder leer el archivo
+
+        if(resultadoLectura == 0) //Si no ha LeerArchivo no ha podido leer el archivo es porque hemos introducido un nombre no valido
+        {
+            printf("El archivo no es valido, introduzca uno valido: ");
+        }
+
+    }
+    while(resultadoLectura != 1);
+}
 
 void DibujarLaberinto(Laberinto laberinto) ///Funcion para imprimir por pantalla el laberinto
 {
