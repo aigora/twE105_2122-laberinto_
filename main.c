@@ -10,6 +10,11 @@ typedef struct Laberinto
     int dimensiones;
     char* casillas;
 }Laberinto;
+typedef struct
+{
+    int x;
+    int y;
+}Jugador;
 
 ///Prototipos de funciones
 void DibujarLaberinto(Laberinto laberinto);
@@ -125,7 +130,39 @@ void PedirArchivo(Laberinto* laberinto) ///Funcion para pedir el archivo
         {
             printf("El archivo no es valido, introduzca uno valido: ");
         }
+void PedirUbicacionJugador(Laberinto laberinto, Jugador* jugador)
+{
+    int x;
+    int y;
 
+    int indice;
+    int posicionCorrecta = 0;
+
+    do
+    {
+        printf("Introduzca la posicion X del jugador: ");
+        scanf("%d", &x);
+
+        printf("Introduzca la posicion Y del jugador: ");
+        scanf("%d", &y);
+
+        indice = laberinto.ancho * y + x;
+
+        if(x < 0 || x >= laberinto.ancho || y < 0 || y >= laberinto.largo)
+        {
+            printf("La posicion seleccionada no es valida!\n");
+        }
+        else if(laberinto.casillas[indice] == '#')
+        {
+            printf("Pared! Posicion no valida\n");
+        }
+        else
+        {
+            posicionCorrecta = 1;
+        }
+    }
+    while(posicionCorrecta != 1);
+}
     }
     while(resultadoLectura != 1);
 }
