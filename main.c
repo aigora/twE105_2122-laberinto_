@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h> //Para el uso de la funcion malloc()
+#include <ctype.h> //Para el uso de la funcion toupper()
 
 #define LONGITUD_ARCHIVO_MAX 40
+#define SALIDA 1
+#define VALIDO 2
+#define PARED 0
 
 typedef struct Laberinto
 {
@@ -18,10 +22,14 @@ typedef struct
 }Jugador;
 
 ///Prototipos de funciones
-void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices);
+void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices); //Indices enumera filas y columnas si es 1, si es 0 no las enumera
 int LeerArchivo(const char* archivo, Laberinto* laberinto);
 int RellenarCasillas(const char* archivo, Laberinto* laberinto);
 void PedirArchivo(Laberinto* laberinto);
+int ActualizarPosicion(Laberinto laberinto, Jugador* jugador, int x, int y);
+int PedirMovimiento(Laberinto laberinto, Jugador* jugador);
+void Ejecutar(Laberinto laberinto, Jugador* jugador);
+
 
 
 int main()
@@ -36,6 +44,8 @@ int main()
     PedirUbicacionJugador(laberinto, &jugador);
 
     DibujarLaberinto(laberinto, &jugador, 0);
+
+    Ejecutar(laberinto, &jugador);
 
     free(laberinto.casillas); //Se libera la memoria reservada con malloc
 
@@ -226,20 +236,20 @@ void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices) ///Fun
     printf("\n");
 }
 
-int ActualizarPosicion(struct Laberinto laberinto, struct Jugador* jugador, int x, int y)
+int ActualizarPosicion(Laberinto laberinto, Jugador* jugador, int x, int y) ///Funcion para mover al jugador
 {
     int indice = laberinto.ancho * y + x;
 
     if(x <= -1 || x >= laberinto.ancho || y <= -1 || y >= laberinto.largo)
     {
-        return SALIDA;
+        return SALIDA; //Si las nuevas coordenadas se salen de los limites del laberinto, retorna SALIDA
     }
     else if(laberinto.casillas[indice] == '#')
     {
-        printf("Ahi hay una pared!\n");
+        printf("Ahi hay una pared!\n"); //Comprueba que las nuevas coordenadas del jugador en el laberinto no corresponde a una pared
         return PARED;
     }
-    else
+    else //Si las nuevas coordenadas no llevan al jugador a una pared o a la salida, entonces se guardan las nuevas coordenadas, para registrar el movimiento
     {
         jugador->x = x;
         jugador->y = y;
@@ -248,7 +258,7 @@ int ActualizarPosicion(struct Laberinto laberinto, struct Jugador* jugador, int 
 
 }
 
-int PedirMovimiento(struct Laberinto laberinto, struct Jugador* jugador)
+int PedirMovimiento(Laberinto laberinto, Jugador* jugador) ///Funcion para pedir al usuario que introduzca un movimiento
 {
     char letra;
     int x = jugador->x;
@@ -259,7 +269,7 @@ int PedirMovimiento(struct Laberinto laberinto, struct Jugador* jugador)
     {
     printf("Introduzca: W, A, S, D para mover al jugador\n");
     scanf("%s", &letra);
-    min2mayus = toupper(letra);
+    min2mayus = toupper(letra); //La funcion toupper() convierte un caracter en minusculas a mayusculas
 
     switch(min2mayus)
     {
@@ -301,7 +311,7 @@ int PedirMovimiento(struct Laberinto laberinto, struct Jugador* jugador)
 
 }
 
-void Ejecutar(struct Laberinto laberinto, struct Jugador* jugador)
+void Ejecutar(Laberinto laberinto, Jugador* jugador) ///Funcion que ejecuta el juego hasta encontrar la salida
 {
     int completado = VALIDO;
 
