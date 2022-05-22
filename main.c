@@ -247,3 +247,56 @@ int ActualizarPosicion(struct Laberinto laberinto, struct Jugador* jugador, int 
     }
 
 }
+
+int PedirMovimiento(struct Laberinto laberinto, struct Jugador* jugador)
+{
+    char letra;
+    int x = jugador->x;
+    int y = jugador->y;
+    int movimientoValido = 0;
+    char min2mayus;
+    do
+    {
+    printf("Introduzca: W, A, S, D para mover al jugador\n");
+    scanf("%s", &letra);
+    min2mayus = toupper(letra);
+
+    switch(min2mayus)
+    {
+    case 'W':
+        y--;
+        movimientoValido = ActualizarPosicion(laberinto, jugador, x, y);
+        y = jugador->y;
+        break;
+    case 'A':
+        x--;
+        movimientoValido = ActualizarPosicion(laberinto, jugador, x, y);
+        x = jugador->x;
+        break;
+
+    case 'S':
+        y++;
+        movimientoValido = ActualizarPosicion(laberinto, jugador, x, y);
+        y = jugador->y;
+        break;
+
+    case 'D':
+        x++;
+        movimientoValido = ActualizarPosicion(laberinto, jugador, x, y);
+        x = jugador->x;
+        break;
+
+    default:
+        printf("Movimiento no valido\n");
+        break;
+
+    }
+    }while(movimientoValido == PARED);
+
+    if(movimientoValido == SALIDA)
+    {
+        return SALIDA;
+    }
+    return VALIDO;
+
+}
