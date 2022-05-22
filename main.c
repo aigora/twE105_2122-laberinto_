@@ -300,3 +300,22 @@ int PedirMovimiento(struct Laberinto laberinto, struct Jugador* jugador)
     return VALIDO;
 
 }
+
+void Ejecutar(struct Laberinto laberinto, struct Jugador* jugador)
+{
+    int completado = VALIDO;
+
+    while(1)
+    {
+        completado = PedirMovimiento(laberinto, jugador);
+
+        if(completado == SALIDA)
+        {
+            break;
+        }
+
+        DibujarLaberinto(laberinto, jugador, 0);
+    }
+
+    printf("Has salido del laberinto!");
+}
