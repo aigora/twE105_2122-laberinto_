@@ -225,3 +225,25 @@ void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices) ///Fun
 
     printf("\n");
 }
+
+int ActualizarPosicion(struct Laberinto laberinto, struct Jugador* jugador, int x, int y)
+{
+    int indice = laberinto.ancho * y + x;
+
+    if(x <= -1 || x >= laberinto.ancho || y <= -1 || y >= laberinto.largo)
+    {
+        return SALIDA;
+    }
+    else if(laberinto.casillas[indice] == '#')
+    {
+        printf("Ahi hay una pared!\n");
+        return PARED;
+    }
+    else
+    {
+        jugador->x = x;
+        jugador->y = y;
+        return VALIDO;
+    }
+
+}
