@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> //Para el uso de la funcion malloc()
 
 #define LONGITUD_ARCHIVO_MAX 40
 
@@ -18,7 +18,7 @@ typedef struct
 }Jugador;
 
 ///Prototipos de funciones
-void DibujarLaberinto(Laberinto laberinto);
+void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices);
 int LeerArchivo(const char* archivo, Laberinto* laberinto);
 int RellenarCasillas(const char* archivo, Laberinto* laberinto);
 void PedirArchivo(Laberinto* laberinto);
@@ -31,10 +31,13 @@ int main()
 
     PedirArchivo(&laberinto);
 
-    DibujarLaberinto(laberinto);
+    DibujarLaberinto(laberinto, NULL, 1);
 
     PedirUbicacionJugador(laberinto, &jugador);
 
+    DibujarLaberinto(laberinto, &jugador, 0);
+
+    free(laberinto.casillas); //Se libera la memoria reservada con malloc
 
     return 0;
 }
@@ -68,6 +71,8 @@ void PedirUbicacionJugador(Laberinto laberinto, Jugador* jugador)
         else
         {
             posicionCorrecta = 1;
+            jugador->x = x; //Se guardan las coords iniciales en la estructura Jugador
+            jugador->y = y;
         }
     }
     while(posicionCorrecta != 1);
@@ -170,21 +175,53 @@ void PedirArchivo(Laberinto* laberinto) ///Funcion para pedir el archivo
     }while(resultadoLectura != 1);
 }
 
-void DibujarLaberinto(Laberinto laberinto) ///Funcion para imprimir por pantalla el laberinto
+void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices) ///Funcion para imprimir por pantalla el laberinto
 {
     int i = 0;
     int j = 0;
+    int posicionJugador;
 
+    if(jugador != NULL)
+    {
+        posicionJugador = laberinto.ancho * jugador->y + jugador->x; //Convierte las coords 2D a 1D del jugador, "vectoriza" a la "matriz jugador"
+    }
+
+    if(indices == 1) //Si indices es 1 (TRUE) entonces enumera las filas y columnas del laberinto para facilitar la colocacion del jugador
+    {
+
+
+        printf("   ");
+        for(i = 0; i < laberinto.ancho; i++)
+        {
+            printf("%d ", i);
+        }
+
+        printf("\n");
+    }
 
     for(i = 0; i < laberinto.largo; i++) //Bucles anidados para recorrer el laberinto
     {
+        if(indices == 1)
+        {
+            printf("%d  ", i);
+        }
+
         for(j = 0; j < laberinto.ancho; j++)
         {
             int PosvMatriz = laberinto.ancho * i + j; //Vectoriza la matriz que contiene al laberinto
 
-            printf("%c ", laberinto.casillas[PosvMatriz]); //Muestra la casilla separada por un espacio (para ver mas limpio el laberinto)
+            if(jugador != NULL && PosvMatriz == posicionJugador) //Si las coordenadas 1D de la matriz y el jugador coinciden y no contienen una pared, entonces imprime al jugador
+            {
+                printf("X "); //La X simboliza al jugador
+            }
+            else
+            {
+                printf("%c ", laberinto.casillas[PosvMatriz]); //Mostrar casilla
+            }
         }
         //Siguiente fila
         printf("\n");
     }
+
+    printf("\n");
 }
