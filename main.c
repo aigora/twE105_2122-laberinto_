@@ -7,7 +7,7 @@
 #define VALIDO 2
 #define PARED 0
 
-typedef struct Laberinto
+typedef struct
 {
     int largo;
     int ancho;
@@ -29,6 +29,7 @@ void PedirArchivo(Laberinto* laberinto);
 int ActualizarPosicion(Laberinto laberinto, Jugador* jugador, int x, int y);
 int PedirMovimiento(Laberinto laberinto, Jugador* jugador);
 void Ejecutar(Laberinto laberinto, Jugador* jugador);
+void PedirUbicacionJugador(Laberinto laberinto, Jugador* jugador);
 
 
 
