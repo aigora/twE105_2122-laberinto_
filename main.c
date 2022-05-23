@@ -12,6 +12,7 @@ typedef struct
     int largo;
     int ancho;
     int dimensiones;
+    int visibilidad;
     char* casillas;
 }Laberinto;
 
@@ -30,6 +31,7 @@ int ActualizarPosicion(Laberinto laberinto, Jugador* jugador, int x, int y);
 int PedirMovimiento(Laberinto laberinto, Jugador* jugador);
 void Ejecutar(Laberinto laberinto, Jugador* jugador);
 void PedirUbicacionJugador(Laberinto laberinto, Jugador* jugador);
+int Restringir(int x, int min, int max);
 
 
 
@@ -43,6 +45,9 @@ int main()
     DibujarLaberinto(laberinto, NULL, 1);
 
     PedirUbicacionJugador(laberinto, &jugador);
+
+    printf("Introduzca la visibilidad: ");
+    scanf("%d", &laberinto.visibilidad);
 
     DibujarLaberinto(laberinto, &jugador, 0);
 
@@ -186,48 +191,84 @@ void PedirArchivo(Laberinto* laberinto) ///Funcion para pedir el archivo
     }while(resultadoLectura != 1);
 }
 
+int Restringir(int x, int min, int max) ///Funcion que servira para limitar la visibilidad del jugador
+{
+    if(x < min)
+        return min;
+
+    if(x > max)
+        return max;
+
+    return x;
+
+    //La funcion "restringe" un intervalo de datos comprendido entre min y max, si el dato x se encuentra en el intervalo devolvera x
+    //Pero si sale del intervalo por debajo, devolvera min y si sale por arriba devolvera el max
+
+}
+
 void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices) ///Funcion para imprimir por pantalla el laberinto
 {
     int i = 0;
     int j = 0;
     int posicionJugador;
 
+    int minX = 0, maxX = laberinto.ancho;
+    int minY = 0, maxY = laberinto.largo;
+
+
     if(jugador != NULL)
     {
         posicionJugador = laberinto.ancho * jugador->y + jugador->x; //Convierte las coords 2D a 1D del jugador, "vectoriza" a la "matriz jugador"
+
+        if(indices == 0) //Solo limitara la vision cuando indices este desactivado, despues de introducir las coordenadas iniciales del jugador
+        {
+            minX = Restringir(jugador->x - laberinto.visibilidad, 0, laberinto.ancho);
+            maxX = Restringir(jugador->x + laberinto.visibilidad, 0, laberinto.ancho);
+            minY = Restringir(jugador->x - laberinto.visibilidad, 0, laberinto.largo);
+            maxY = Restringir(jugador->x + laberinto.visibilidad, 0, laberinto.largo);
+        }
     }
 
     if(indices == 1) //Si indices es 1 (TRUE) entonces enumera las filas y columnas del laberinto para facilitar la colocacion del jugador
     {
 
 
-        printf("   ");
+        printf("     ");
         for(i = 0; i < laberinto.ancho; i++)
         {
-            printf("%d ", i);
+            if(i < 10)
+                printf("%d  ", i);
+
+            else
+                printf("%d ", i);
         }
 
         printf("\n");
     }
 
-    for(i = 0; i < laberinto.largo; i++) //Bucles anidados para recorrer el laberinto
+    for(i = minY; i < maxY; i++) //Bucles anidados para recorrer el laberinto
     {
         if(indices == 1)
         {
-            printf("%d  ", i);
+            if(i < 10)
+                printf("%d    ", i);
+            else if(i >= 10 && i <= 99)
+                printf("%d   ", i);
+            else
+                printf("%d  ", i);
         }
 
-        for(j = 0; j < laberinto.ancho; j++)
+        for(j = minX; j < maxX; j++)
         {
             int PosvMatriz = laberinto.ancho * i + j; //Vectoriza la matriz que contiene al laberinto
 
             if(jugador != NULL && PosvMatriz == posicionJugador) //Si las coordenadas 1D de la matriz y el jugador coinciden y no contienen una pared, entonces imprime al jugador
             {
-                printf("X "); //La X simboliza al jugador
+                printf("O  "); //La X simboliza al jugador
             }
             else
             {
-                printf("%c ", laberinto.casillas[PosvMatriz]); //Mostrar casilla
+                printf("%c  ", laberinto.casillas[PosvMatriz]); //Mostrar casilla
             }
         }
         //Siguiente fila
