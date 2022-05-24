@@ -7,7 +7,7 @@ Se trata de un juego que contiene varios laberintos a resolver. Se resolverán e
 Diego Fernandes Alves (55229)
 Mario Carrión Sirvent (55174)
 Dionisio Caballero García (55541)
-Osama Boutman El-Khattabi 
+Osama Boutman El-Khattabi (55151)
 Lorena 
 
 
