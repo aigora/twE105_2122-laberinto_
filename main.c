@@ -413,6 +413,10 @@ int ActualizarPosicion(Laberinto laberinto, Jugador* jugador, int x, int y) ///F
     {
         jugador->x = x;
         jugador->y = y;
+        if(laberinto.casillas[indice] == '!')
+        {
+            DarPista(x, y, laberinto.salidas, laberinto.nSalidas);
+        }
         return VALIDO;
     }
 
