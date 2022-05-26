@@ -130,7 +130,9 @@ void PedirUbicacionJugador(Laberinto laberinto, Jugador* jugador)
 int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Funcion que rellena las casillas del laberinto a partir de los valores leidos
 {
     int contador = 0;
-
+laberinto->nSalidas = 0;
+    int posSalida = 0; //Contador de posicion de salidas rellenadas
+    int i, j;
     FILE* pf = fopen(archivo, "r"); //Abre el archivo introducido por teclado
 
     if(pf != NULL)
@@ -146,7 +148,81 @@ int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Funcion que r
             }
 
         }
+for(i = 0; i < laberinto->largo; i++) //Recorre el borde lateral izqdo
+        {
+            int indice = laberinto->ancho * i + 0;
+            if(laberinto->casillas[indice] == 'G')
+                laberinto->nSalidas++;
+        }
 
+        for(j = 0; j < laberinto->ancho; j++) //Recorre el borde superior
+        {
+            int indice = laberinto->ancho * 0 + j;
+            if(laberinto->casillas[indice] == 'G')
+                laberinto->nSalidas++;
+        }
+
+        for(i = 0; i < laberinto->largo; i++) //Recorre el borde lateral dcho
+        {
+            int indice = laberinto->ancho * i + (laberinto->ancho - 1);
+            if(laberinto->casillas[indice] == 'G')
+                laberinto->nSalidas++;
+        }
+
+        for(j = 0; j < laberinto->ancho; j++) //Recorre el borde inferior
+        {
+            int indice = laberinto->ancho * (laberinto->largo - 1) + j;
+            if(laberinto->casillas[indice] == 'G')
+                laberinto->nSalidas++;
+        }
+
+        laberinto->salidas = (Coordenadas*)malloc(sizeof(Coordenadas)*laberinto->nSalidas);
+
+        for(i = 0; i < laberinto->largo; i++)
+        {
+            int indice = laberinto->ancho * i + 0;
+            if(laberinto->casillas[indice] == 'G')
+            {
+                laberinto->salidas[posSalida].x = 0;
+                laberinto->salidas[posSalida].y = i;
+                posSalida++;
+            }
+        }
+
+        for(j = 0; j < laberinto->ancho; j++) //Recorre el borde superior
+        {
+            int indice = laberinto->ancho * 0 + j;
+            if(laberinto->casillas[indice] == 'G')
+            {
+                laberinto->salidas[posSalida].x = j;
+                laberinto->salidas[posSalida].y = 0;
+                posSalida++;
+            }
+        }
+
+        for(i = 0; i < laberinto->largo; i++) //Recorre el borde lateral dcho
+        {
+            int indice = laberinto->ancho * i + (laberinto->ancho - 1);
+            if(laberinto->casillas[indice] == 'G')
+            {
+                laberinto->salidas[posSalida].x = laberinto->ancho - 1;
+                laberinto->salidas[posSalida].y = i;
+                posSalida++;
+            }
+        }
+
+        for(j = 0; j < laberinto->ancho; j++) //Recorre el borde inferior
+        {
+            int indice = laberinto->ancho * (laberinto->largo - 1) + j;
+            if(laberinto->casillas[indice] == 'G')
+            {
+                laberinto->salidas[posSalida].x = j;
+                laberinto->salidas[posSalida].y = laberinto->largo - 1;
+                posSalida++;
+            }
+        }
+
+        fclose(pf);
         return 1; //Lectura correcta
     }
 
