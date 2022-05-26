@@ -551,3 +551,94 @@ void ActualizarEstado(int opcion, enum Estados* estado)
         }
     }
 }
+CoordenadasReales Normalizar(Coordenadas coords)
+{
+    float modulo = sqrt(coords.x*coords.x + coords.y*coords.y);
+    CoordenadasReales coordsNorm;
+
+    coordsNorm.x /= modulo;
+    coordsNorm.y /= modulo;
+
+    return coordsNorm;
+}
+
+void DarPista(int x, int y, Coordenadas* salidas, int nsalidas)
+{
+    int i;
+    int xmin = 0, ymin = 0;
+    float distmin = 9999;
+    float dist;
+
+    for(i=0; i<nsalidas; i++)
+    {
+        Coordenadas c = salidas[i]; //Guardamos la salida actual en c
+        Coordenadas vector;
+        vector.x = c.x - x;
+        vector.y = c.y - y;
+
+        dist = (vector.x * vector.x) + (vector.y * vector.y);
+
+        if(dist<distmin)
+        {
+            distmin = dist;
+            xmin = vector.x;
+            ymin = vector.y; //Vector hacia la salida mas cercana
+        }
+    }
+
+    Coordenadas min;
+    min.x = xmin;
+    min.y = ymin;
+
+    CoordenadasReales normalizado = Normalizar(min);
+
+    CoordenadasReales normalizadoAbs = normalizado; //No queremos perder las coordenadas normalizadas originales para luego comparar
+    normalizadoAbs.x = fabs(normalizadoAbs.x)*100.0f;
+    normalizadoAbs.y = fabs(normalizadoAbs.y)*100.0f;
+
+    if(normalizadoAbs.x >= 0.0f && normalizadoAbs.x <= 25.0f)
+    {
+        printf("Muevete MUY POCO a la ");
+    }
+    else if(normalizadoAbs.x >= 25.0f && normalizadoAbs.x <= 50.0f)
+    {
+        printf("Muevete un POCO a la ");
+    }
+    else if(normalizadoAbs.x >= 50.0f && normalizadoAbs.x <= 75.0f)
+    {
+        printf("Muevete BASTANTE a la ");
+    }
+    else if(normalizadoAbs.x >= 75.0f && normalizadoAbs.x <= 100.0f)
+    {
+        printf("Muevete MUCHISIMO a la ");
+    }
+
+    if(normalizado.x < 0)
+        printf("Izquierda");
+    else
+        printf("Derecha");
+
+    printf(" y ");
+
+    if(normalizadoAbs.y >= 0.0f && normalizadoAbs.y <= 25.0f)
+    {
+        printf("MUY POCO hacia ");
+    }
+    else if(normalizadoAbs.y >= 25.0f && normalizadoAbs.y <= 50.0f)
+    {
+        printf("un POCO hacia ");
+    }
+    else if(normalizadoAbs.y >= 50.0f && normalizadoAbs.y <= 75.0f)
+    {
+        printf("BASTANTE hacia ");
+    }
+    else if(normalizadoAbs.y >= 75.0f && normalizadoAbs.y <= 100.0f)
+    {
+        printf("MUCHISIMO hacia ");
+    }
+
+    if(normalizado.x < 0)
+        printf("Arriba\n");
+    else
+        printf("Abajo\n");
+}
