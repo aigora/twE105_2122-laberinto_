@@ -22,6 +22,15 @@ typedef struct
     int y;
 }Jugador;
 
+enum Estados
+{
+    eInicio = 0,
+    eJuego,
+    eCreditos,
+    eTutorial,
+    eSalir
+};
+
 ///Prototipos de funciones
 void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices); //Indices enumera filas y columnas si es 1, si es 0 no las enumera
 int LeerArchivo(const char* archivo, Laberinto* laberinto);
@@ -32,28 +41,52 @@ int PedirMovimiento(Laberinto laberinto, Jugador* jugador);
 void Ejecutar(Laberinto laberinto, Jugador* jugador);
 void PedirUbicacionJugador(Laberinto laberinto, Jugador* jugador);
 int Restringir(int x, int min, int max);
+void Jugar();
+void Creditos();
+void Tutorial();
+void ActualizarEstado(int opcion, enum Estados* estado);
 
 
 
 int main()
 {
-    Laberinto laberinto;
-    Jugador jugador;
+    enum Estados estado = eInicio;
 
-    PedirArchivo(&laberinto);
+    int opc;
 
-    DibujarLaberinto(laberinto, NULL, 1);
 
-    PedirUbicacionJugador(laberinto, &jugador);
+    printf("------------MENU LABERINTO----------\n");
+    printf("(1) Jugar\n(2) Creditos\n(3) Tutorial\n(4) Salir\n");
+    scanf("%d", &opc);
 
-    printf("Introduzca la visibilidad: ");
-    scanf("%d", &laberinto.visibilidad);
+   ActualizarEstado(opc, &estado);
 
-    DibujarLaberinto(laberinto, &jugador, 0);
+    while(estado != eSalir)
+    {
+        if(estado == eInicio)
+        {
+             printf("------------MENU LABERINTO----------\n");
+            printf("(1) Jugar\n(2) Creditos\n(3) Tutorial\n(4) Salir\n");
+            scanf("%d", &opc);
+        }
+        else if(estado == eJuego)
+        {
+            Jugar();
+        }
+        else if(estado == eCreditos)
+        {
+            Creditos();
+            scanf("%d", &opc);
+        }
+        else if(estado == eTutorial)
+        {
+            Tutorial();
+            scanf("%d", &opc);
+        }
 
-    Ejecutar(laberinto, &jugador);
+        ActualizarEstado(opc, &estado);
 
-    free(laberinto.casillas); //Se libera la memoria reservada con malloc
+    }
 
     return 0;
 }
@@ -370,4 +403,75 @@ void Ejecutar(Laberinto laberinto, Jugador* jugador) ///Funcion que ejecuta el j
     }
 
     printf("Has salido del laberinto!");
+}
+
+void Jugar()
+{
+    Laberinto laberinto;
+    Coordenadas jugador;
+
+    PedirArchivo(&laberinto);
+
+    DibujarLaberinto(laberinto, NULL, 1);
+
+    PedirUbicacionJugador(laberinto, &jugador);
+
+    printf("Introduzca la visibilidad: ");
+    scanf("%d", &laberinto.visibilidad);
+
+    DibujarLaberinto(laberinto, &jugador, 0);
+
+    Ejecutar(laberinto, &jugador);
+
+    free(laberinto.casillas); //Se libera la memoria reservada con malloc
+}
+
+void Creditos()
+{
+    printf("CREDITOS\n");
+    printf("Pusla 0 para salir!\n");
+}
+
+void Tutorial()
+{
+    printf("TUTORIAL\n");
+    printf("Pusla 0 para salir!\n");
+}
+
+void ActualizarEstado(int opcion, enum Estados* estado)
+{
+
+
+
+    if(*estado == eInicio)
+    {
+        switch (opcion)
+        {
+        case 1:
+            *estado = eJuego;
+            break;
+        case 2:
+            *estado = eCreditos;
+            break;
+        case 3:
+            *estado = eTutorial;
+            break;
+        case 4:
+            *estado = eSalir;
+            break;
+        default:
+            break;
+        }
+    }
+    else if(*estado == eCreditos || *estado == eTutorial)
+    {
+        switch (opcion)
+        {
+        case 0:
+            *estado = eInicio;
+            break;
+        default:
+            break;
+        }
+    }
 }
