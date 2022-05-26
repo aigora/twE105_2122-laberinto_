@@ -526,8 +526,8 @@ void Creditos()
     printf("CREDITOS\n");
     printf("Integrantes del grupo:\n\n");
     printf("Diego Fernandes Alves (55229).\n");
-    printf("Mario Carrión Sirvent (55174).\n");
-    printf("Dionisio Caballero García (55541).\n");
+    printf("Mario Carrion Sirvent (55174).\n");
+    printf("Dionisio Caballero Garcia (55541).\n");
     printf("Osama Boutman El-Khattabi (55151).\n");
     printf("Lorena.\n\n");
     printf("Pusla 0 para salir!\n");
