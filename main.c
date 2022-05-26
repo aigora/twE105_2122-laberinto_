@@ -300,7 +300,7 @@ void PedirArchivo(Laberinto* laberinto) ///Funcion para pedir el archivo
 
     char archivo[LONGITUD_ARCHIVO_MAX];
 
-    printf("Introduzca el archivo del laberinto: ");
+    printf("Introduzca el archivo del laberinto (mapa_1.txt,mapa_2.txt): ");
 
 
     do //Pide el archivo hasta que se introduzca uno valido
@@ -530,6 +530,12 @@ void Creditos()
 void Tutorial()
 {
     printf("TUTORIAL\n");
+    printf("Integrantes del grupo:\n\n");
+    printf("Diego Fernandes Alves (55229).\n");
+    printf("Mario Carrión Sirvent (55174).\n");
+    printf("Dionisio Caballero García (55541).\n");
+    printf("Osama Boutman El-Khattabi (55151).\n");
+    printf("Lorena.\n\n");
     printf("Pusla 0 para salir!\n");
 }
 
