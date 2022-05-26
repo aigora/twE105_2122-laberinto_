@@ -31,12 +31,6 @@ typedef struct
     float y;
 }CoordenadasReales;
 
-typedef struct
-{
-    int x;
-    int y;
-}Jugador;
-
 enum Estados
 {
     eInicio = 0,
@@ -47,14 +41,14 @@ enum Estados
 };
 
 ///Prototipos de funciones
-void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices); //Indices enumera filas y columnas si es 1, si es 0 no las enumera
+void DibujarLaberinto(Laberinto laberinto, Coordenadas* jugador, int indices); //Indices enumera filas y columnas si es 1, si es 0 no las enumera
 int LeerArchivo(const char* archivo, Laberinto* laberinto);
 int RellenarCasillas(const char* archivo, Laberinto* laberinto);
 void PedirArchivo(Laberinto* laberinto);
-int ActualizarPosicion(Laberinto laberinto, Jugador* jugador, int x, int y);
-int PedirMovimiento(Laberinto laberinto, Jugador* jugador);
-void Ejecutar(Laberinto laberinto, Jugador* jugador);
-void PedirUbicacionJugador(Laberinto laberinto, Jugador* jugador);
+int ActualizarPosicion(Laberinto laberinto, Coordenadas* jugador, int x, int y);
+int PedirMovimiento(Laberinto laberinto, Coordenadas* jugador);
+void Ejecutar(Laberinto laberinto, Coordenadas* jugador);
+void PedirUbicacionJugador(Laberinto laberinto, Coordenadas* jugador);
 int Restringir(int x, int min, int max);
 void Jugar();
 void Creditos();
@@ -106,7 +100,7 @@ int main()
     return 0;
 }
 
-void PedirUbicacionJugador(Laberinto laberinto, Jugador* jugador)
+void PedirUbicacionJugador(Laberinto laberinto, Coordenadas* jugador)
 {
     int x;
     int y;
@@ -145,7 +139,7 @@ void PedirUbicacionJugador(Laberinto laberinto, Jugador* jugador)
 int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Funcion que rellena las casillas del laberinto a partir de los valores leidos
 {
     int contador = 0;
-laberinto->nSalidas = 0;
+    laberinto->nSalidas = 0;
     int posSalida = 0; //Contador de posicion de salidas rellenadas
     int i, j;
     FILE* pf = fopen(archivo, "r"); //Abre el archivo introducido por teclado
@@ -330,7 +324,7 @@ int Restringir(int x, int min, int max) ///Funcion que servira para limitar la v
 
 }
 
-void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices) ///Funcion para imprimir por pantalla el laberinto
+void DibujarLaberinto(Laberinto laberinto, Coordenadas* jugador, int indices) ///Funcion para imprimir por pantalla el laberinto
 {
     int i = 0;
     int j = 0;
@@ -348,8 +342,8 @@ void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices) ///Fun
         {
             minX = Restringir(jugador->x - laberinto.visibilidad, 0, laberinto.ancho);
             maxX = Restringir(jugador->x + laberinto.visibilidad, 0, laberinto.ancho);
-            minY = Restringir(jugador->x - laberinto.visibilidad, 0, laberinto.largo);
-            maxY = Restringir(jugador->x + laberinto.visibilidad, 0, laberinto.largo);
+            minY = Restringir(jugador->y - laberinto.visibilidad, 0, laberinto.largo);
+            maxY = Restringir(jugador->y + laberinto.visibilidad, 0, laberinto.largo);
         }
     }
 
@@ -384,15 +378,15 @@ void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices) ///Fun
 
         for(j = minX; j < maxX; j++)
         {
-            int PosvMatriz = laberinto.ancho * i + j; //Vectoriza la matriz que contiene al laberinto
+            int indice = laberinto.ancho * i + j; //Vectoriza la matriz que contiene al laberinto
 
-            if(jugador != NULL && PosvMatriz == posicionJugador) //Si las coordenadas 1D de la matriz y el jugador coinciden y no contienen una pared, entonces imprime al jugador
+            if(jugador != NULL && indice == posicionJugador) //Si las coordenadas 1D de la matriz y el jugador coinciden y no contienen una pared, entonces imprime al jugador
             {
-                printf("O  "); //La X simboliza al jugador
+                printf("X  "); //La X simboliza al jugador
             }
             else
             {
-                printf("%c  ", laberinto.casillas[PosvMatriz]); //Mostrar casilla
+                printf("%c  ", laberinto.casillas[indice]); //Mostrar casilla
             }
         }
         //Siguiente fila
@@ -402,7 +396,7 @@ void DibujarLaberinto(Laberinto laberinto, Jugador* jugador, int indices) ///Fun
     printf("\n");
 }
 
-int ActualizarPosicion(Laberinto laberinto, Jugador* jugador, int x, int y) ///Funcion para mover al jugador
+int ActualizarPosicion(Laberinto laberinto, Coordenadas* jugador, int x, int y) ///Funcion para mover al jugador
 {
     int indice = laberinto.ancho * y + x;
 
@@ -421,14 +415,16 @@ int ActualizarPosicion(Laberinto laberinto, Jugador* jugador, int x, int y) ///F
         jugador->y = y;
         if(laberinto.casillas[indice] == '!')
         {
+            printf("\nPISTA!!!\n");
             DarPista(x, y, laberinto.salidas, laberinto.nSalidas);
+            printf("\n");
         }
         return VALIDO;
     }
 
 }
 
-int PedirMovimiento(Laberinto laberinto, Jugador* jugador) ///Funcion para pedir al usuario que introduzca un movimiento
+int PedirMovimiento(Laberinto laberinto, Coordenadas* jugador) ///Funcion para pedir al usuario que introduzca un movimiento
 {
     char letra;
     int x = jugador->x;
@@ -481,7 +477,7 @@ int PedirMovimiento(Laberinto laberinto, Jugador* jugador) ///Funcion para pedir
 
 }
 
-void Ejecutar(Laberinto laberinto, Jugador* jugador) ///Funcion que ejecuta el juego hasta encontrar la salida
+void Ejecutar(Laberinto laberinto, Coordenadas* jugador) ///Funcion que ejecuta el juego hasta encontrar la salida
 {
     int completado = VALIDO;
 
@@ -529,7 +525,7 @@ void Creditos()
     printf("Mario Carrion Sirvent (55174).\n");
     printf("Dionisio Caballero Garcia (55541).\n");
     printf("Osama Boutman El-Khattabi (55151).\n");
-    printf("Lorena.\n\n");
+    printf("\n\n");
     printf("Pusla 0 para salir!\n");
 }
 
@@ -541,9 +537,6 @@ void Tutorial()
 
 void ActualizarEstado(int opcion, enum Estados* estado)
 {
-
-
-
     if(*estado == eInicio)
     {
         switch (opcion)
