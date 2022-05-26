@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h> //Para el uso de la funcion malloc()
 #include <ctype.h> //Para el uso de la funcion toupper()
+#include <math.h>
 
 #define LONGITUD_ARCHIVO_MAX 40
 #define SALIDA 1
@@ -14,7 +15,15 @@ typedef struct
     int dimensiones;
     int visibilidad;
     char* casillas;
+    Coordenadas* salidas; 
+    int nSalidas; //Numero de salidas del laberinto 
 }Laberinto;
+
+typedef struct
+{
+    float x;
+    float y;
+}CoordenadasReales;
 
 typedef struct
 {
@@ -45,8 +54,8 @@ void Jugar();
 void Creditos();
 void Tutorial();
 void ActualizarEstado(int opcion, enum Estados* estado);
-
-
+void DarPista(int x, int y, Coordenadas* salidas, int nsalidas);
+CoordenadasReales Normalizar(Coordenadas coords);
 
 int main()
 {
