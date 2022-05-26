@@ -10,13 +10,19 @@
 
 typedef struct
 {
+    int x;
+    int y;
+}Coordenadas;
+
+typedef struct
+{
     int largo;
     int ancho;
     int dimensiones;
     int visibilidad;
     char* casillas;
-    Coordenadas* salidas; 
-    int nSalidas; //Numero de salidas del laberinto 
+    Coordenadas* salidas;
+    int nSalidas; //Numero de salidas del laberinto
 }Laberinto;
 
 typedef struct
@@ -157,7 +163,7 @@ laberinto->nSalidas = 0;
             }
 
         }
-for(i = 0; i < laberinto->largo; i++) //Recorre el borde lateral izqdo
+        for(i = 0; i < laberinto->largo; i++) //Recorre el borde lateral izqdo
         {
             int indice = laberinto->ancho * i + 0;
             if(laberinto->casillas[indice] == 'G')
