@@ -233,7 +233,6 @@ int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Rellena las c
             }
         }
 
-        free(laberinto->salidas);
         fclose(pf);
         return 1; //Lectura correcta
     }
@@ -420,6 +419,7 @@ int ActualizarPosicion(Laberinto laberinto, Coordenadas* jugador, int x, int y) 
             DarPista(x, y, laberinto.salidas, laberinto.nSalidas);
             printf("\n");
         }
+
         return VALIDO;
     }
 
@@ -589,9 +589,14 @@ void ActualizarEstado(int opcion, enum Estados* estado) ///Permite el estado de 
 }
 CoordenadasReales Normalizar(Coordenadas coords) ///Normaliza un vector de 2D
 {
-    float modulo = sqrt(coords.x*coords.x + coords.y*coords.y);
+    float modulo = sqrt(coords.x*coords.x + coords.y*coords.y); //Modulo del vector
     CoordenadasReales coordsNorm;
 
+    //Copia de las coordenadas del vector que se la pasa como argumento al vector
+    coordsNorm.x = coords.x;
+    coordsNorm.y = coords.y;
+
+    //Vector normalizado
     coordsNorm.x /= modulo;
     coordsNorm.y /= modulo;
 
@@ -612,10 +617,10 @@ void DarPista(int x, int y, Coordenadas* salidas, int nsalidas)
     /*Para saber cual es la salida mas cercana es necesario obtener estos vectores resultantes, normalizarlos hallar
     su valor absoluto y compararlos con su valor con signo.
 
-    Si p.e el vector normalizado en valor absoluto es (0.84, 0.2) entonces el jugador tendra que moverse muy poco
-    verticalmente y bastante longitudinalmente para saber si es hacia arriba o abajo, o izquierda derecha, se compara
-    con su valor con signo, si fuera (-0.84, 0.2) entonces el jugador se tendria que desplazar muy poco hacia abajo y mucho
-    hacia la derecha*/
+    Si p.e el vector normalizado en valor absoluto es (0.84, 0.2) entonces el jugador tendra que MUCHO
+    verticalmente y POCO longitudinalmente para saber si es hacia arriba o abajo, o izquierda derecha, se compara
+    con su valor con signo, si fuera (-0.84, 0.2) entonces el jugador se tendria que desplazar MUCHO hacia ARRIBA y POCO
+    hacia la IZQUIERDA*/
 
     for(i=0; i<nsalidas; i++)
     {
@@ -688,7 +693,7 @@ void DarPista(int x, int y, Coordenadas* salidas, int nsalidas)
         printf("MUCHISIMO hacia ");
     }
 
-    if(normalizado.x < 0)
+    if(normalizado.y < 0)
         printf("Arriba\n");
     else
         printf("Abajo\n");
