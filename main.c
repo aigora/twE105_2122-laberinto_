@@ -3,7 +3,7 @@
 #include <ctype.h> //funcion toupper()
 #include <math.h> //funcion sqrt()
 
-#define LONGITUD_ARCHIVO_MAX 40
+#define LONGITUD_ARCHIVO_MAX 40 //El nombre del archivo del mapa, como mucho podrá ser de hasta 39 caracteres
 #define SALIDA 1
 #define VALIDO 2
 #define PARED 0
@@ -21,7 +21,7 @@ typedef struct
     int dimensiones;
     int visibilidad;
     char* casillas;
-    Coordenadas* salidas;
+    Coordenadas* salidas; //Ubicacion de las salidas en el laberinto
     int nSalidas; //Numero de salidas del laberinto
 }Laberinto;
 
@@ -40,8 +40,7 @@ enum Estados
     eSalir
 };
 
-///Prototipos de funciones
-void DibujarLaberinto(Laberinto laberinto, Coordenadas* jugador, int indices); //Indices enumera filas y columnas si es 1, si es 0 no las enumera
+void DibujarLaberinto(Laberinto laberinto, Coordenadas* jugador, int indices);
 int LeerArchivo(const char* archivo, Laberinto* laberinto);
 int RellenarCasillas(const char* archivo, Laberinto* laberinto);
 void PedirArchivo(Laberinto* laberinto);
@@ -74,7 +73,7 @@ int main()
     {
         if(estado == eInicio)
         {
-             printf("------------MENU LABERINTO----------\n");
+            printf("------------MENU LABERINTO----------\n");
             printf("(1) Jugar\n(2) Creditos\n(3) Tutorial\n(4) Salir\n");
             scanf("%d", &opc);
         }
@@ -100,7 +99,7 @@ int main()
     return 0;
 }
 
-void PedirUbicacionJugador(Laberinto laberinto, Coordenadas* jugador)
+void PedirUbicacionJugador(Laberinto laberinto, Coordenadas* jugador) ///Pide al usuario las coordenadas en las quiere aparecer al comienzo del juego
 {
     int x;
     int y;
@@ -128,15 +127,16 @@ void PedirUbicacionJugador(Laberinto laberinto, Coordenadas* jugador)
         }
         else
         {
+            //Se guardan las coords iniciales en la estructura Jugador
             posicionCorrecta = 1;
-            jugador->x = x; //Se guardan las coords iniciales en la estructura Jugador
+            jugador->x = x;
             jugador->y = y;
         }
     }
     while(posicionCorrecta != 1);
 }
 
-int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Funcion que rellena las casillas del laberinto a partir de los valores leidos
+int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Rellena las casillas del laberinto a partir de los valores leidos y guarda la informacion de las salidas
 {
     int contador = 0;
     laberinto->nSalidas = 0;
@@ -152,11 +152,13 @@ int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Funcion que r
         {
             if(valor != '\n' && valor != ' ') //Si no es un salto de línea o un espacio, entonces es un caracter
             {
-                laberinto->casillas[contador] = valor; //Almacena el valor leido del archivo en la casilla correspondiente de la estructura Laberinto
+                laberinto->casillas[contador] = valor; //Almacena el valor leido del archivo en la casilla correspondiente del laberinto
                 contador++;
             }
 
         }
+
+        //Las salidas solo se encontraran en los bordes
         for(i = 0; i < laberinto->largo; i++) //Recorre el borde lateral izqdo
         {
             int indice = laberinto->ancho * i + 0;
@@ -240,9 +242,9 @@ int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Funcion que r
     return 0; //Error al abrir el archivo
 }
 
-int LeerArchivo(const char* archivo, Laberinto* laberinto) ///Funcion para leer el contenido del archivo
+int LeerArchivo(const char* archivo, Laberinto* laberinto) ///Lee el mapa del laberinto contenido en el documento de texto
 {
-    int primeraLinea = 0;
+    int primeraLinea = 0; //Variable auxiliar para contar el numero de columnas, solo se contaran en la primera linea leida del fichero
     int filas = 1;
     int columnas = 1;
 
@@ -253,23 +255,21 @@ int LeerArchivo(const char* archivo, Laberinto* laberinto) ///Funcion para leer 
     {
         char valor;
 
-
-        while(fscanf(pf, "%c", &valor) != EOF) //Lee caracter a caracter y lo guarda en "valor"
+        while(fscanf(pf, "%c", &valor) != EOF)
         {
-            if(valor == '\n') //Cada nueva linea, se incrementa el numero de filas
+            if(valor == '\n') //Cada salto de linea, incrementa el numero de filas
             {
                 filas++;
                 primeraLinea = 1;
             }
 
-            else if(valor == ' ' && primeraLinea == 0) //Cada espacio, se incrementa el numero de columnas
+            else if(valor == ' ' && primeraLinea == 0) //Cada espacio, incrementa el numero de columnas
             {
                 columnas++;
             }
         }
 
         //Parametros del laberinto
-
         laberinto->largo = filas;
         laberinto->ancho = columnas;
         laberinto->dimensiones = filas * columnas;
@@ -289,7 +289,7 @@ int LeerArchivo(const char* archivo, Laberinto* laberinto) ///Funcion para leer 
     return 0;
 }
 
-void PedirArchivo(Laberinto* laberinto) ///Funcion para pedir el archivo
+void PedirArchivo(Laberinto* laberinto) ///Pide al usuario que introduzca el mapa por teclado
 {
     int resultadoLectura = 0;
 
@@ -300,17 +300,17 @@ void PedirArchivo(Laberinto* laberinto) ///Funcion para pedir el archivo
 
     do //Pide el archivo hasta que se introduzca uno valido
     {
-        scanf("%s", archivo); ///El nombre del archivo introducido por teclado debe ser <nombrearchivo>.<txt>
-        resultadoLectura = LeerArchivo(archivo, laberinto); //La funcion LeerArchivo devuelve 0 en caso de no poder leer el archivo
+        scanf("%s", archivo); //El nombre del archivo introducido por teclado debe ser <nombrearchivo>.<txt>
+        resultadoLectura = LeerArchivo(archivo, laberinto); //LeerArchivo devuelve 0 en caso de no poder leer el archivo
 
-        if(resultadoLectura == 0) //Si no ha LeerArchivo no ha podido leer el archivo es porque hemos introducido un nombre no valido
+        if(resultadoLectura == 0) /+
         {
             printf("El archivo no es valido, introduzca uno valido: ");
         }
     }while(resultadoLectura != 1);
 }
 
-int Restringir(int x, int min, int max) ///Funcion que servira para limitar la visibilidad del jugador
+int Restringir(int x, int min, int max) ///Limita la visibilidad del jugador
 {
     if(x < min)
         return min;
@@ -325,7 +325,7 @@ int Restringir(int x, int min, int max) ///Funcion que servira para limitar la v
 
 }
 
-void DibujarLaberinto(Laberinto laberinto, Coordenadas* jugador, int indices) ///Funcion para imprimir por pantalla el laberinto
+void DibujarLaberinto(Laberinto laberinto, Coordenadas* jugador, int indices) ///Imprime por pantalla el laberinto
 {
     int i = 0;
     int j = 0;
@@ -348,7 +348,7 @@ void DibujarLaberinto(Laberinto laberinto, Coordenadas* jugador, int indices) //
         }
     }
 
-    if(indices == 1) //Si indices es 1 (TRUE) entonces enumera las filas y columnas del laberinto para facilitar la colocacion del jugador
+    if(indices == 1) //Si indices es 1 (TRUE) entonces enumera las filas y columnas del laberinto
     {
 
 
@@ -397,7 +397,7 @@ void DibujarLaberinto(Laberinto laberinto, Coordenadas* jugador, int indices) //
     printf("\n");
 }
 
-int ActualizarPosicion(Laberinto laberinto, Coordenadas* jugador, int x, int y) ///Funcion para mover al jugador
+int ActualizarPosicion(Laberinto laberinto, Coordenadas* jugador, int x, int y) ///Movimiento del jugador
 {
     int indice = laberinto.ancho * y + x;
 
@@ -425,7 +425,7 @@ int ActualizarPosicion(Laberinto laberinto, Coordenadas* jugador, int x, int y) 
 
 }
 
-int PedirMovimiento(Laberinto laberinto, Coordenadas* jugador) ///Funcion para pedir al usuario que introduzca un movimiento
+int PedirMovimiento(Laberinto laberinto, Coordenadas* jugador) ///Pide al usuario que introduzca un movimiento
 {
     char letra;
     int x = jugador->x;
@@ -478,7 +478,7 @@ int PedirMovimiento(Laberinto laberinto, Coordenadas* jugador) ///Funcion para p
 
 }
 
-void Ejecutar(Laberinto laberinto, Coordenadas* jugador) ///Funcion que ejecuta el juego hasta encontrar la salida
+void Ejecutar(Laberinto laberinto, Coordenadas* jugador) ///Ejecuta el juego hasta encontrar la salida (gameloop)
 {
     int completado = VALIDO;
 
@@ -495,6 +495,7 @@ void Ejecutar(Laberinto laberinto, Coordenadas* jugador) ///Funcion que ejecuta 
     }
 
     printf("Has salido del laberinto!\n");
+    system("PAUSE");
     exit(1);
 }
 
@@ -506,6 +507,9 @@ void Jugar()
     PedirArchivo(&laberinto);
 
     DibujarLaberinto(laberinto, NULL, 1);
+    /*Imprime el laberinto por primera vez
+    Como aun no se han introducido las coordenadas iniciales el argumento "jugador" será NULL
+    Y el argumento "indices" será 1, para enumerar filas y columnas y facilitar al usuario la colocacion del jugador*/
 
     PedirUbicacionJugador(laberinto, &jugador);
 
@@ -513,10 +517,12 @@ void Jugar()
     scanf("%d", &laberinto.visibilidad);
 
     DibujarLaberinto(laberinto, &jugador, 0);
+    /*Tras introducir las coordenadas iniciales y la visibilidad el juego comienza y se desactivan
+    los indices para facilitar la lectura del usuario*/
 
     Ejecutar(laberinto, &jugador);
 
-    free(laberinto.casillas); //Se libera la memoria reservada con malloc
+    free(laberinto.casillas);
 }
 
 void Creditos()
@@ -537,7 +543,7 @@ void Tutorial()
     printf("Pusla 0 para salir!\n");
 }
 
-void ActualizarEstado(int opcion, enum Estados* estado)
+void ActualizarEstado(int opcion, enum Estados* estado) ///Permite el estado de cada opcion del menu, al moverse por el menu
 {
     if(*estado == eInicio)
     {
@@ -559,6 +565,9 @@ void ActualizarEstado(int opcion, enum Estados* estado)
             break;
         }
     }
+    /*Si el usuario esta en el menu de inicio, y pulsa cualquier opcion el programa guarda
+    la opcion pulsada en el estado correspondiente */
+
     else if(*estado == eCreditos || *estado == eTutorial)
     {
         switch (opcion)
@@ -570,8 +579,11 @@ void ActualizarEstado(int opcion, enum Estados* estado)
             break;
         }
     }
+
+    /*Si el usario se encuentra en creditos o en tutorial, al pulsar 0
+    volverá al estado eInicio correspondiente al menu de inicio*/
 }
-CoordenadasReales Normalizar(Coordenadas coords)
+CoordenadasReales Normalizar(Coordenadas coords) ///Normaliza un vector de 2D
 {
     float modulo = sqrt(coords.x*coords.x + coords.y*coords.y);
     CoordenadasReales coordsNorm;
@@ -586,8 +598,20 @@ void DarPista(int x, int y, Coordenadas* salidas, int nsalidas)
 {
     int i;
     int xmin = 0, ymin = 0;
-    float distmin = 9999;
+    float distmin = 9999; //Se elige una distancia min lo suficientemente grande para hacer la primera comparacion
     float dist;
+
+    /*Para ver a que distancia se encuentra el jugadro de una salida se restan las coordenadas del jugador
+    con las coordenadas de dicha salida, dado que al restarse, se obtiene un vector resultante que apunta desde
+    la posicion del jugador hacia la salida
+
+    /*Para saber cual es la salida mas cercana es necesario obtener estos vectores resultantes, normalizarlos hallar
+    su valor absoluto y compararlos con su valor con signo.
+
+    Si p.e el vector normalizado en valor absoluto es (0.84, 0.2) entonces el jugador tendra que moverse muy poco
+    verticalmente y bastante longitudinalmente para saber si es hacia arriba o abajo, o izquierda derecha, se compara
+    con su valor con signo, si fuera (-0.84, 0.2) entonces el jugador se tendria que desplazar muy poco hacia abajo y mucho
+    hacia la derecha*/
 
     for(i=0; i<nsalidas; i++)
     {
@@ -602,7 +626,8 @@ void DarPista(int x, int y, Coordenadas* salidas, int nsalidas)
         {
             distmin = dist;
             xmin = vector.x;
-            ymin = vector.y; //Vector hacia la salida mas cercana
+            ymin = vector.y;
+            //Vector hacia la salida mas cercana
         }
     }
 
@@ -616,6 +641,8 @@ void DarPista(int x, int y, Coordenadas* salidas, int nsalidas)
     normalizadoAbs.x = fabs(normalizadoAbs.x)*100.0f;
     normalizadoAbs.y = fabs(normalizadoAbs.y)*100.0f;
 
+
+    //Se establecen unos valores porcentuales, para que el programa interprete que es mucho o poco
     if(normalizadoAbs.x >= 0.0f && normalizadoAbs.x <= 25.0f)
     {
         printf("Muevete MUY POCO a la ");
