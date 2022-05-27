@@ -16,4 +16,5 @@ Lorena
 
 ## Objetivos del trabajo
 
+Crear un juego de laberintos usando los conocimientos que se van adquiriendo en clase.
 Reforzar los recursos de programación adquiridos, ya que el juego conlleva el uso de todos los conocimientos impartidos en clase.
