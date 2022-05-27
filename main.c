@@ -295,7 +295,7 @@ void PedirArchivo(Laberinto* laberinto) ///Pide al usuario que introduzca el map
 
     char archivo[LONGITUD_ARCHIVO_MAX];
 
-    printf("Introduzca el archivo del laberinto (mapa_1.txt,mapa_2.txt): ");
+    printf("Introduzca el archivo del laberinto (mapa_1.txt o mapa_2.txt): ");
 
 
     do //Pide el archivo hasta que se introduzca uno valido
