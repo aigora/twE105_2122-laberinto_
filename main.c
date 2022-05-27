@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h> //Para el uso de la funcion malloc()
-#include <ctype.h> //Para el uso de la funcion toupper()
-#include <math.h>
+#include <stdlib.h> //funcion malloc()
+#include <ctype.h> //funcion toupper()
+#include <math.h> //funcion sqrt()
 
 #define LONGITUD_ARCHIVO_MAX 40
 #define SALIDA 1
@@ -231,6 +231,7 @@ int RellenarCasillas(const char* archivo, Laberinto* laberinto) ///Funcion que r
             }
         }
 
+        free(laberinto->salidas);
         fclose(pf);
         return 1; //Lectura correcta
     }
@@ -493,7 +494,8 @@ void Ejecutar(Laberinto laberinto, Coordenadas* jugador) ///Funcion que ejecuta 
         DibujarLaberinto(laberinto, jugador, 0);
     }
 
-    printf("Has salido del laberinto!");
+    printf("Has salido del laberinto!\n");
+    exit(1);
 }
 
 void Jugar()
