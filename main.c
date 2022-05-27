@@ -303,7 +303,7 @@ void PedirArchivo(Laberinto* laberinto) ///Pide al usuario que introduzca el map
         scanf("%s", archivo); //El nombre del archivo introducido por teclado debe ser <nombrearchivo>.<txt>
         resultadoLectura = LeerArchivo(archivo, laberinto); //LeerArchivo devuelve 0 en caso de no poder leer el archivo
 
-        if(resultadoLectura == 0) /+
+        if(resultadoLectura == 0)
         {
             printf("El archivo no es valido, introduzca uno valido: ");
         }
@@ -539,7 +539,11 @@ void Creditos()
 
 void Tutorial()
 {
-    printf("TUTORIAL\n");
+    printf("TUTORIAL\n\n");
+    printf("1- Seleccione JUGAR (1)\n");
+    printf("2- Escriba un mapa (mapa_1.txt o mapa_2.txt)\n");
+    printf("3- Siga las estrucciones en pantalla.\n");
+    printf("4- A jugar!\n\n");
     printf("Pusla 0 para salir!\n");
 }
 
