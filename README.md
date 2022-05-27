@@ -1,6 +1,6 @@
 # [Laberinto]
 
-Se trata de un juego que contiene varios laberintos a resolver. Se resolverán en orden y en caso de completarlo se desbloqueará el siguiente, más complicado que el anterior. En usuario escogerá dónde empezar en cada laberinto y deberá encontrar la salida, proceso en el cual puede encontrar ayudas u objetos que tendrán distintas funciones durante la partida.
+Se trata de un juego que contiene dos laberintos a resolver. Se selecciona cual se quiere resolver y el usuario escogerá dónde empezar en cada laberinto y su visibilidad. Deberá encontrar la salida, proceso en el cual puede encontrar pistas que le indicarán hacia donde está la salida levemente.
 
 ## Integrantes del equipo
 
